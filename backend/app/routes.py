@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from .models import User, Event
 from . import db
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -9,6 +9,7 @@ from flask_jwt_extended import (
     create_access_token,
     set_access_cookies,
     unset_jwt_cookies,
+    get_csrf_token,
 )
 
 
@@ -50,7 +51,13 @@ def login():
         access_token = create_access_token(identity=user.id)
         response = jsonify({"msg": "Login successful", "username": username})
         set_access_cookies(response, access_token)
-        response.set_cookie("csrf_access_token", get_csrf_token(access_token))
+        response.set_cookie(
+            "csrf_access_token",
+            get_csrf_token(access_token),
+            secure=False,  # Use True in production
+            httponly=False,  # Must be False so JavaScript can access it
+            samesite="Lax",  # Adjust as needed
+        )
 
         return response, 200
     else:
@@ -67,7 +74,11 @@ def logout():
 @event_bp.route("/events", methods=["GET"])
 @jwt_required()
 def get_events():
+    current_app.logger.info("Entered get_events route")
+
     user_id = get_jwt_identity()
+    current_app.logger.info(f"User ID from token: {user_id}")
+
     user = User.query.get(user_id)
 
     # Events owned by the user

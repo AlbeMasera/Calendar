@@ -1,9 +1,22 @@
 <script>
-  import { onMount } from 'svelte';
-import debounce from 'lodash/debounce';
+  import debounce from 'lodash/debounce';
   export let selectedItems = []; // Bound to parent component
   let suggestions = [];
   let query = '';
+
+
+  const getCsrfToken = () => {
+    // Function to retrieve CSRF token from cookie
+    const name = 'csrf_access_token=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      if (ca[i].trim().indexOf(name) == 0) {
+        return ca[i].trim().substring(name.length, ca[i].trim().length);
+      }
+    }
+    return '';
+  };
 
   const fetchSuggestions = debounce(async () => {
     if (query.length < 1) {
@@ -11,26 +24,28 @@ import debounce from 'lodash/debounce';
       return;
     }
     try {
+      const csrfToken = getCsrfToken();
       const response = await fetch(`/api/users?q=${encodeURIComponent(query)}`, {
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'X-CSRF-TOKEN': csrfToken,
         },
       });
       const data = await response.json();
       if (response.ok) {
         suggestions = data.users.filter(user => !selectedItems.includes(user));
+      } else {
+        console.error('Error fetching suggestions:', data.msg);
       }
     } catch (err) {
-      // Handle error
+      console.error('Fetch error:', err);
     }
   }, 300);
 
   const addItem = async (item) => {
     try {
       const response = await fetch(`/api/users?q=${encodeURIComponent(item)}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+        credentials: 'include',
       });
       const data = await response.json();
       if (response.ok && data.users.includes(item)) {
@@ -38,11 +53,10 @@ import debounce from 'lodash/debounce';
         suggestions = [];
         query = '';
       } else {
-        // Show an error or feedback that the user does not exist
         alert(`User "${item}" does not exist.`);
       }
     } catch (err) {
-      // Handle error
+      console.error('Fetch error:', err);
     }
   };
 
@@ -52,7 +66,7 @@ import debounce from 'lodash/debounce';
 </script>
 
 <div>
-  <label  for="user-input">Share with:</label>
+  <label for="user-input">Share with:</label>
   <div>
     {#each selectedItems as item}
       <span>{item} <button on:click={() => removeItem(item)}>x</button></span>

@@ -3,4 +3,5 @@ Flask-JWT-Extended
 Flask-Migrate
 Flask-SQLAlchemy
 psycopg2-binary
-bleach
+flask_cors
+flask-jwt-extended

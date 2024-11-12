@@ -1,46 +1,54 @@
 <script>
-  console.log('Calendar component is rendering');
-
   let events = [];
   let error = '';
-  let username = localStorage.getItem('username');
+  let username = localStorage.getItem('username') || '';
 
+  
   const fetchEvents = async () => {
     try {
-      const token = localStorage.getItem('token');
-      console.log('Stored Token:', token);
       const response = await fetch('/api/events', {
+        method: 'GET',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'X-CSRF-TOKEN': csrfToken,
         },
       });
       const data = await response.json();
-      console.log('Response Status:', response.status);
-      console.log('Fetched Data:', data);
       if (response.ok) {
         events = data.events;
-        console.log('Events:', events);
       } else {
         error = data.msg || 'Error fetching events';
-        console.error('Error:', error);
         if (response.status === 401) {
-          console.log('Unauthorized');
           window.location.href = '/login';
         }
       }
     } catch (err) {
       error = 'An error occurred';
-      console.error('Fetch Error:', err);
     }
+  };
+  
+
+  const getCsrfToken = () => {
+    // Function to retrieve CSRF token from cookie
+    const name = 'csrf_access_token=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      if (ca[i].trim().indexOf(name) == 0) {
+        return ca[i].trim().substring(name.length, ca[i].trim().length);
+      }
+    }
+    return '';
   };
 
 
+  const csrfToken = getCsrfToken();
     
   fetchEvents();
   
 </script>
 
-<h2>Your Events!</h2>
+<h2>Your Events</h2>
 {#if error}
   <div class="error">{error}</div>
 {/if}

@@ -2,11 +2,36 @@
   import { navigate } from 'svelte-routing';
   import { isAuthenticated } from '../stores/auth';
   let username = '';
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    isAuthenticated.set(false);
-    navigate('/login');
+
+  const logout = async () => {
+    try {
+      await fetch('/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': getCsrfToken(),
+        },
+      });
+      localStorage.removeItem('username');
+      isAuthenticated.set(false);
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
+  const getCsrfToken = () => {
+    // Function to retrieve CSRF token from cookie
+    const name = 'csrf_access_token=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      if (ca[i].trim().indexOf(name) == 0) {
+        return ca[i].trim().substring(name.length, ca[i].trim().length);
+      }
+    }
+    return '';
   };
   $: username = localStorage.getItem('username') || ''; 
 </script>

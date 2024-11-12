@@ -7,21 +7,22 @@
   let error = '';
 
   const login = async () => {
+    error = '';
     try {
       const response = await fetch('/auth/login', {
         method: 'POST',
+        credentials: 'include',  
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
+
       if (response.ok) {
-        console.log(data);
-        localStorage.setItem('token', data.access_token);
-        localStorage.setItem('username', data.username);
-        isAuthenticated.set(true);
+        username = data.username;
+        localStorage.setItem('username', username);
         navigate('/calendar');
       } else {
-        error = data.msg;
+        error = data.msg || 'An error occurred';
       }
     } catch (err) {
       error = 'An error occurred';
