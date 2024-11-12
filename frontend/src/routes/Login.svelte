@@ -1,5 +1,7 @@
+<!-- Login.svelte -->
 <script>
   import { navigate } from 'svelte-routing';
+  import { isAuthenticated } from '../stores/auth';
   let username = '';
   let password = '';
   let error = '';
@@ -13,7 +15,10 @@
       });
       const data = await response.json();
       if (response.ok) {
+        console.log(data);
         localStorage.setItem('token', data.access_token);
+        localStorage.setItem('username', data.username);
+        isAuthenticated.set(true);
         navigate('/calendar');
       } else {
         error = data.msg;
@@ -23,6 +28,8 @@
     }
   };
 </script>
+
+
 
 <h2>Login</h2>
 {#if error}

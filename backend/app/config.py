@@ -2,8 +2,15 @@ import os
 
 
 class Config:
-    SECRET_KEY = "028307c5f5aacb25af460096b3b674b7a63e751a098a97f04ba3afea453c550ea0e170102e9ef0a8912f28e58e4173c0ac1d209c00c00a93b7932f7ad30007ef94ecb279e3c8d527b59a0090b0194483c7adc4658482021bd5987484e7edc05dd91aebe2f755d2221d197c51ae54d73257e656df64f51a556732fbfdadf1bcf3dc2a267fcdaabbb72cc9181c68ab98c1e59266490f4e577cdb3f4dab12661aeb73ed10f26432a72d119ca080db45d4260d9031d6f297d77b3cedc0fec4a547458c5de6cd466b903684c3debe8ebd876c69b1b688d4a8bdb35dc6fb8b3c4ac292f085fc84e6ec1cd01f92464a2d8cd9bc00b3c346008033840017a91a05061aa6"  # Replace with a secure key
-    SQLALCHEMY_DATABASE_URI = "postgresql://user:password@db:5432/calendardb"
+    SECRET_KEY = os.environ.get("SECRET_KEY", "default_secure_key")
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URI", "postgresql://user:password@db:5432/calendardb"
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = "028307c5f5aacb25af460096b3b674b7a63e751a098a97f04ba3afea453c550ea0e170102e9ef0a8912f28e58e4173c0ac1d209c00c00a93b7932f7ad30007ef94ecb279e3c8d527b59a0090b0194483c7adc4658482021bd5987484e7edc05dd91aebe2f755d2221d197c51ae54d73257e656df64f51a556732fbfdadf1bcf3dc2a267fcdaabbb72cc9181c68ab98c1e59266490f4e577cdb3f4dab12661aeb73ed10f26432a72d119ca080db45d4260d9031d6f297d77b3cedc0fec4a547458c5de6cd466b903684c3debe8ebd876c69b1b688d4a8bdb35dc6fb8b3c4ac292f085fc84e6ec1cd01f92464a2d8cd9bc00b3c346008033840017a91a05061aa6"  # Replace with a secure key
-    JWT_ACCESS_TOKEN_EXPIRES = 3600  # 1 hour
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "default_jwt_secret")
+    JWT_ACCESS_TOKEN_EXPIRES = int(
+        os.environ.get("JWT_ACCESS_TOKEN_EXPIRES", 3600)
+    )  # 1 hour by default
+    JWT_COOKIE_SECURE = True  # Only send cookies over HTTPS
+    JWT_COOKIE_HTTPONLY = True  # Prevent JavaScript access to the cookie
+    JWT_COOKIE_CSRF_PROTECT = True  # Enable CSRF protection

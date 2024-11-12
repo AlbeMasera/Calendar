@@ -1,4 +1,5 @@
 <script>
+  import { getContext } from 'svelte';
   import { Router, Route } from "svelte-routing";
   import Nav from './components/Nav.svelte';
   import Home from './routes/Home.svelte';
@@ -6,6 +7,8 @@
   import Register from './routes/Register.svelte';
   import Calendar from './routes/Calendar.svelte';
   import Event from './routes/Event.svelte';
+
+  const location = getContext("location");
 </script>
 
 <Nav />
@@ -21,10 +24,10 @@
     <Register />
   </Route>
   <Route path="/calendar">
-    <Calendar />
+    
+      <Calendar />
   </Route>
   <Route path="/event/:id" let:params>
-    <!-- Pass the id as a prop to Event -->
     <Event id={params.id} />
   </Route>
 </Router>
@@ -32,4 +35,3 @@
 <style>
   /* Add global styles here */
 </style>
-

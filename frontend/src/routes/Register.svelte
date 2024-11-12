@@ -1,11 +1,24 @@
 <script>
   import { navigate } from 'svelte-routing';
+
   let username = '';
   let password = '';
   let error = '';
-  let success = '';
 
   const register = async () => {
+    error = '';
+
+    // Frontend validation
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+      error = 'Username must be 3-20 characters and contain only letters, numbers, and underscores.';
+      return;
+    }
+
+    if (password.length < 6) {
+      error = 'Password must be at least 6 characters long.';
+      return;
+    }
+
     try {
       const response = await fetch('/auth/register', {
         method: 'POST',
@@ -13,11 +26,11 @@
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
+
       if (response.ok) {
-        success = data.msg;
         navigate('/login');
       } else {
-        error = data.msg;
+        error = data.msg || 'An error occurred';
       }
     } catch (err) {
       error = 'An error occurred';
@@ -29,15 +42,8 @@
 {#if error}
   <div class="error">{error}</div>
 {/if}
-{#if success}
-  <div class="success">{success}</div>
-{/if}
 <form on:submit|preventDefault={register}>
   <input type="text" bind:value={username} placeholder="Username" required />
   <input type="password" bind:value={password} placeholder="Password" required />
   <button type="submit">Register</button>
 </form>
-
-<style>
-  /* Add styles here */
-</style>

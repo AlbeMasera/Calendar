@@ -1,11 +1,13 @@
 <script>
   import { onMount } from 'svelte';
   import { navigate } from 'svelte-routing';
+  import Autocomplete from '../components/Autocomplete.svelte'; // New component
   export let id;
   let title = '';
   let description = '';
   let start_time = '';
   let end_time = '';
+  let shared_with = []; // Array of usernames
   let error = '';
   let isEditing = false;
 
@@ -22,8 +24,9 @@
         if (response.ok) {
           title = data.title;
           description = data.description;
-          start_time = data.start_time;
-          end_time = data.end_time;
+          start_time = data.start_time.slice(0, 16);
+          end_time = data.end_time.slice(0, 16);
+          shared_with = data.shared_with;
         } else {
           error = data.msg;
         }
@@ -43,13 +46,13 @@
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ title, description, start_time, end_time }),
+        body: JSON.stringify({ title, description, start_time, end_time, shared_with }),
       });
       const data = await response.json();
       if (response.ok) {
         navigate('/calendar');
       } else {
-        error = data.msg;
+        error = data.msg || 'An error occurred';
       }
     } catch (err) {
       error = 'An error occurred';
@@ -66,9 +69,9 @@
   <textarea bind:value={description} placeholder="Description"></textarea>
   <input type="datetime-local" bind:value={start_time} required />
   <input type="datetime-local" bind:value={end_time} required />
+
+  <!-- Autocomplete Component for Sharing -->
+  <Autocomplete bind:selectedItems={shared_with} />
+
   <button type="submit">Save</button>
 </form>
-
-<style>
-  /* Add styles here */
-</style>

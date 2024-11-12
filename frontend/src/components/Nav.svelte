@@ -1,20 +1,21 @@
 <script>
   import { navigate } from 'svelte-routing';
-  let isAuthenticated = false;
-
+  import { isAuthenticated } from '../stores/auth';
+  let username = '';
   const logout = () => {
     localStorage.removeItem('token');
-    isAuthenticated = false;
+    localStorage.removeItem('username');
+    isAuthenticated.set(false);
     navigate('/login');
   };
-
-  $: isAuthenticated = localStorage.getItem('token') ? true : false;
+  $: username = localStorage.getItem('username') || ''; 
 </script>
 
 <nav>
   <a href="/">Home</a>
-  {#if isAuthenticated}
+  {#if $isAuthenticated}
     <a href="/calendar">Calendar</a>
+    <span>Welcome, {username}!</span> 
     <button on:click={logout}>Logout</button>
   {:else}
     <a href="/login">Login</a>
@@ -26,6 +27,11 @@
   nav {
     background-color: #333;
     padding: 1em;
+  }
+
+  span {
+    color: white;
+    margin-right: 1em;
   }
 
   nav a {
