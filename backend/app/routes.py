@@ -148,6 +148,30 @@ def create_event():
     return jsonify({"msg": "Event created successfully"}), 201
 
 
+@event_bp.route("/events/<int:event_id>", methods=["DELETE"])
+@jwt_required()
+# @limiter.limit("30 per day")
+def delete_event(event_id):
+
+    user_id = get_jwt_identity()
+    event = Event.query.get(event_id)
+
+    if not event:
+        return jsonify({"msg": "Event not found"}), 404
+
+    if event.owner_id != user_id:
+        return jsonify({"msg": "Permission denied"}), 403
+
+    try:
+        db.session.delete(event)
+        db.session.commit()
+        return jsonify({"msg": "Event deleted successfully"}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error deleting event: {e}")
+        db.session.rollback()
+        return jsonify({"msg": "An error occurred while deleting the event"}), 500
+
+
 @event_bp.route("/events/<int:event_id>", methods=["PUT"])
 @jwt_required()
 def update_event(event_id):

@@ -13,7 +13,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), nullable=False, unique=True)
     password_hash = db.Column(db.String(500), nullable=False)
-    events = db.relationship("Event", backref="owner", lazy=True)
+    events = db.relationship(
+        "Event", backref="owner", lazy=True, cascade="all, delete-orphan"
+    )
     shared_events = db.relationship(
         "Event", secondary=event_user, back_populates="shared_with", lazy="dynamic"
     )
