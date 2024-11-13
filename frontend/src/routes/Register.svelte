@@ -49,3 +49,6 @@
   <input type="password" bind:value={password} placeholder="Password" required />
   <button type="submit">Register</button>
 </form>
+<div>
+  Username must be 3-20 characters and contain only letters, numbers, and underscores and Password must be at least 6 characters long.
+</div>
