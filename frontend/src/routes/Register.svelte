@@ -29,6 +29,8 @@
 
       if (response.ok) {
         navigate('/login');
+        window.location.reload();
+
       } else {
         error = data.msg || 'An error occurred';
       }

@@ -20,7 +20,10 @@
       if (response.ok) {
         username = data.username;
         localStorage.setItem('username', username);
+        isAuthenticated.set(true);
+
         navigate('/calendar');
+        
       } else {
         error = data.msg || 'An error occurred';
       }

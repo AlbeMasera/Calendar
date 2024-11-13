@@ -16,6 +16,7 @@
       localStorage.removeItem('username');
       isAuthenticated.set(false);
       navigate('/login');
+
     } catch (err) {
       console.error('Logout failed:', err);
     }
