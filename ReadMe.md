@@ -28,13 +28,13 @@ A hopefully secure calendar application that allows users to manage schedules
    ```
 
 2. **Run the Build Script**:
-   Simply execute the provided `build.sh` script, which will:
+   Simply execute the provided `deploy.sh` script, which will:
    - Generate self-signed certificates for HTTPS
    - Build and start all required services with Docker Compose.
 
    ```bash
-   chmod +x build.sh
-   ./build.sh
+   chmod +x deploy.sh
+   ./deploy.sh
    ```
 
 3. **Access the Application**:
@@ -52,7 +52,7 @@ calendar-app/
 ├── nginx/                  # NGINX configuration for reverse proxy
 ├── certs/                  # SSL certificates for HTTPS
 ├── private/                # Private keys for SSL certificates
-├── build.sh                # Script to build and start the application
+├── deploy.sh                # Script to build and start the application
 ├── clear_database.sh       # Script to clean the database
 ├── docker-compose.yml      # Docker Compose configuration
 └── README.md               # Project documentation
@@ -60,7 +60,7 @@ calendar-app/
 
 ## Environment Variables
 
-Set up if not already present the following variables in `backend/.env` (the `build.sh` script will ensure they're used):
+Set up if not already present the following variables in `backend/.env` (the `deploy.sh` script will ensure they're used):
 
 ```plaintext
 POSTGRES_USER=user

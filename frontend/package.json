@@ -10,9 +10,7 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "svelte": "^4.0.0",
-    "svelte-routing": "^1.11.0"
-  },
-  "devDependencies": {
+    "svelte-routing": "^1.11.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-replace": "^6.0.1",
