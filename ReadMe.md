@@ -23,8 +23,8 @@ A hopefully secure calendar application that allows users to manage schedules
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/AlbeMasera/calendar-app.git
-   cd calendar-app
+   git clone https://github.com/AlbeMasera/Calendar.git
+   cd Calendar
    ```
 
 2. **Run the Build Script**:
@@ -46,7 +46,7 @@ A hopefully secure calendar application that allows users to manage schedules
 ## Project Structure
 
 ```plaintext
-calendar-app/
+Calendar/
 ├── backend/                # Python backend application
 ├── frontend/               # Svelte frontend application
 ├── nginx/                  # NGINX configuration for reverse proxy
