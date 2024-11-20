@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "start": "sirv public --no-clear --single --host 0.0.0.0 --port 5000"
+    "start": "npx sirv public --no-clear --single --host 0.0.0.0 --port 5001"
   },
   "dependencies": {
     "lodash": "^4.17.21",

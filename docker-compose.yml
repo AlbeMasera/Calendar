@@ -2,8 +2,8 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: pzvhnbouqvwfcitclhmh
+      POSTGRES_PASSWORD: wdkzulrqrwgfywqhbzro
       POSTGRES_DB: calendardb
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -18,14 +18,14 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URI: postgresql://user:password@db:5432/calendardb
+      DATABASE_URI: postgresql://pzvhnbouqvwfcitclhmh:wdkzulrqrwgfywqhbzro@db:5432/calendardb
     networks:
       - webnet
 
   frontend:
     build: ./frontend
     ports:
-      - "5001:5000"
+      - "5001:5001"
     volumes:
       - ./frontend:/app
     networks:
