@@ -12,6 +12,7 @@ COPY public ./public
 # Copy source files and build configuration
 COPY rollup.config.js ./
 COPY src ./src
+COPY index.html ./
 
 # Build the application
 RUN npm run build
